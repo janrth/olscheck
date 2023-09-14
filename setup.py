@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="olscheck",
-    version="0.1.1",
+    version="0.1.2",
     author="Your Name",
     author_email="jan_rathfelder@yahoo.de",
     description="A library to check OLS assumptions.",
