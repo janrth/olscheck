@@ -84,7 +84,7 @@ class OlsCheck:
         y_true = df[y_true_col]
         fittedvalues = df[fittedvalues_col]
         
-        leverage, res_studentized_internal = self._residuals_studentized_internal(df, features)
+        leverage, res_studentized_internal = self._residuals_studentized_internal(df, features, constant)
         cooks_distance = self._cooks_distance(df, leverage, features, fittedvalues, y_true)
         
         if ax is None:
