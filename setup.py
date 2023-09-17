@@ -3,12 +3,12 @@ from setuptools import setup, find_packages
 setup(
     name="olscheck",
     version="0.1.5",
-    author="Your Name",
+    author="Jan Rathfelder",
     author_email="jan_rathfelder@yahoo.de",
     description="A library to check OLS assumptions.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/janrth/ols_assumptions", 
+    url="https://github.com/janrth/olscheck", 
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
