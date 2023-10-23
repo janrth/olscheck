@@ -6,7 +6,9 @@ from statsmodels.graphics.gofplots import ProbPlot
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.tools.tools import add_constant
 from typing import List
-
+import scienceplots
+plt.style.use('science')
+plt.rcParams['text.usetex'] = False
 
 class OlsCheck:
     """
@@ -33,7 +35,10 @@ class OlsCheck:
         y = formula(x)
         return x, y
 
-    def _cooks_distance(self, df:pd.DataFrame, leverage: pd.Series, features: List[str], fittedvalues: pd.Series, y_true: pd.Series) -> pd.Series:
+    def _cooks_distance(self, df:pd.DataFrame, leverage: pd.Series, features: List[str], 
+                        #fittedvalues: pd.Series, 
+                        #y_true: pd.Series
+                       ) -> pd.Series:
         """
         Helper function to calculate Cook's distance.
         """
@@ -72,7 +77,7 @@ class OlsCheck:
         vif["vif"] = [variance_inflation_factor(df_vif.values, i) for i in range(df_vif.shape[1])]
         return vif.sort_values('vif', ascending=False).reset_index(drop=True)
 
-    def leverage_plot(self, df: pd.DataFrame, features:List[str], fittedvalues_col: str, y_true_col: str, axis_lim=True, constant=True, ax=None):
+    def leverage_plot(self, df: pd.DataFrame, features:List[str], axis_lim=True, constant=True, ax=None):
         """
         Residual vs Leverage plot
 
@@ -80,12 +85,12 @@ class OlsCheck:
         aka are influential.
         Good to have none outside the curves.
         """
-        residuals = df['residuals']
-        y_true = df[y_true_col]
-        fittedvalues = df[fittedvalues_col]
+        #residuals = df['residuals']
+        #y_true = df[y_true_col]
+        #fittedvalues = df[fittedvalues_col]
         
         leverage, res_studentized_internal = self._residuals_studentized_internal(df, features, constant)
-        cooks_distance = self._cooks_distance(df, leverage, features, fittedvalues, y_true)
+        cooks_distance = self._cooks_distance(df, leverage, features)
         
         if ax is None:
             fig, ax = plt.subplots()
@@ -124,7 +129,7 @@ class OlsCheck:
         ax.set_xlabel('Leverage')
         ax.set_ylabel('Standardized Residuals')
         ax.legend(loc='upper right')
-        return res_studentized_internal
+        return ax
 
     def histogram_residuals(self, df: pd.DataFrame, ax=None):
         """
@@ -202,6 +207,8 @@ class OlsCheck:
             self.residual_plot(df, fittedvalues_col, ax=ax[0, 0])
             self.qq_plot(df, features, ax=ax[0, 1])
             self.scale_location_plot(df, fittedvalues_col, features, ax=ax[1, 0])
-            self.leverage_plot(df, features, fittedvalues_col, y_true_col, axis_lim, constant, ax=ax[1,1])
+            self.leverage_plot(df, features, 
+                               #fittedvalues_col, y_true_col,
+                               axis_lim, constant, ax=ax[1,1])
             plt.show()
 
