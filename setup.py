@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="olscheck",
-    version="0.1.6",
+    version="0.1.7",
     author="Jan Rathfelder",
     author_email="jan_rathfelder@yahoo.de",
     description="A library to check OLS assumptions.",
@@ -21,7 +21,8 @@ setup(
         "pandas",
         "matplotlib",
         "seaborn",
-        "statsmodels"
+        "statsmodels",
+        "scienceplot"
     ],
 )
 
