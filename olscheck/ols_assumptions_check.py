@@ -10,6 +10,20 @@ import scienceplots
 plt.style.use('science')
 plt.rcParams['text.usetex'] = False
 
+def _resolve_style(style_name: str) -> str:
+    if style_name in plt.style.available:
+        return style_name
+    legacy_map = {
+        "seaborn-paper": "seaborn-v0_8-paper",
+        "seaborn-talk": "seaborn-v0_8-talk",
+        "seaborn-dark": "seaborn-v0_8-dark",
+        "seaborn-white": "seaborn-v0_8-white",
+        "seaborn-darkgrid": "seaborn-v0_8-darkgrid",
+        "seaborn-whitegrid": "seaborn-v0_8-whitegrid",
+        "seaborn-ticks": "seaborn-v0_8-ticks",
+    }
+    return legacy_map.get(style_name, style_name)
+
 class OlsCheck:
     """
     Checks all relevant assumptions of OLS for pooled regression.
@@ -52,14 +66,13 @@ class OlsCheck:
     def _residuals_studentized_internal(self, df: pd.DataFrame, features: List[str], constant=True) -> (np.ndarray, np.ndarray):
         # QR decomposition for leverage calculation
         if constant:
-            df = add_constant(df)
-            X = df[['const']+features]
+            X = df[features].to_numpy()
+            X = np.column_stack((np.ones(len(df)), X))
         else:
-            X = df[features].values
-        residuals = df['residuals']
-        Q, R = np.linalg.qr(X)
-        H = Q @ Q.T
-        leverage = np.diagonal(H)
+            X = df[features].to_numpy()
+        residuals = df['residuals'].to_numpy()
+        Q, _ = np.linalg.qr(X, mode='reduced')
+        leverage = np.sum(Q ** 2, axis=1)
         
         # Compute normalized residuals
         s = np.std(residuals, ddof=1) # using Bessel's correction for sample standard deviation
@@ -202,7 +215,7 @@ class OlsCheck:
         vif_results = self.vif_test(df[features])
         print(vif_results)
         
-        with plt.style.context(plot_context):
+        with plt.style.context(_resolve_style(plot_context)):
             fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(10, 10))      
             self.residual_plot(df, fittedvalues_col, ax=ax[0, 0])
             self.qq_plot(df, features, ax=ax[0, 1])
@@ -211,4 +224,3 @@ class OlsCheck:
                                #fittedvalues_col, y_true_col,
                                axis_lim, constant, ax=ax[1,1])
             plt.show()
-

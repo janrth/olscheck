@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import pytest
 import sys
-from statsmodels.tools.tools import add_constant
 sys.path.insert(0, '../olscheck')
 import ols_assumptions_check
 
@@ -33,4 +32,31 @@ def test_residuals_studentized(setup_data_residuals_studentized, constant):
     expected_leverage, expected_res_studentized_internal = expected_values[constant]
 
     assert np.allclose(leverage, expected_leverage, atol=1e-8)
-    assert np.allclose(res_studentized_internal.to_numpy(), expected_res_studentized_internal, atol=1e-8)
+    assert np.allclose(np.asarray(res_studentized_internal), expected_res_studentized_internal, atol=1e-8)
+
+
+@pytest.mark.parametrize("constant", [True, False])
+def test_residuals_studentized_matches_reference(constant):
+    rng = np.random.default_rng(42)
+    df = pd.DataFrame(
+        rng.normal(size=(200, 3)),
+        columns=["x1", "x2", "x3"],
+    )
+    df["residuals"] = rng.normal(size=len(df))
+    ols_checker = ols_assumptions_check.OlsCheck()
+    leverage, res_studentized_internal = ols_checker._residuals_studentized_internal(
+        df,
+        ["x1", "x2", "x3"],
+        constant=constant,
+    )
+
+    X = df[["x1", "x2", "x3"]].to_numpy()
+    if constant:
+        X = np.column_stack((np.ones(len(df)), X))
+    q_ref, _ = np.linalg.qr(X)
+    leverage_ref = np.diagonal(q_ref @ q_ref.T)
+    residuals = df["residuals"].to_numpy()
+    res_studentized_ref = residuals / residuals.std(ddof=1)
+
+    assert np.allclose(leverage, leverage_ref, atol=1e-10)
+    assert np.allclose(res_studentized_internal, res_studentized_ref, atol=1e-10)
