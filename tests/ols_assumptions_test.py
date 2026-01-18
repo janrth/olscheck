@@ -27,11 +27,11 @@ def test_ols_assumptions(mocker, setup_data_ols_assumptions):
     ols_checker.ols_assumptions(setup_data_ols_assumptions, 'y_true', 'y_pred', ['x1', 'x2'])
 
     # Check if the plotting context manager was used
-    mock_style_context.assert_called_once_with('seaborn-paper')
+    expected_style = ols_assumptions_check._resolve_style('seaborn-paper')
+    mock_style_context.assert_called_once_with(expected_style)
 
     # Check if there are 4 subplots
     axes = plt.gcf().axes  # gcf() gets the current figure, and .axes gives a list of its axes (subplots)
     assert len(axes) == 4, f"Expected 4 subplots, but found {len(axes)}"
-
 
 
