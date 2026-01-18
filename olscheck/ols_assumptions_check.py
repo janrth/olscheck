@@ -10,6 +10,20 @@ import scienceplots
 plt.style.use('science')
 plt.rcParams['text.usetex'] = False
 
+def _resolve_style(style_name: str) -> str:
+    if style_name in plt.style.available:
+        return style_name
+    legacy_map = {
+        "seaborn-paper": "seaborn-v0_8-paper",
+        "seaborn-talk": "seaborn-v0_8-talk",
+        "seaborn-dark": "seaborn-v0_8-dark",
+        "seaborn-white": "seaborn-v0_8-white",
+        "seaborn-darkgrid": "seaborn-v0_8-darkgrid",
+        "seaborn-whitegrid": "seaborn-v0_8-whitegrid",
+        "seaborn-ticks": "seaborn-v0_8-ticks",
+    }
+    return legacy_map.get(style_name, style_name)
+
 class OlsCheck:
     """
     Checks all relevant assumptions of OLS for pooled regression.
@@ -201,7 +215,7 @@ class OlsCheck:
         vif_results = self.vif_test(df[features])
         print(vif_results)
         
-        with plt.style.context(plot_context):
+        with plt.style.context(_resolve_style(plot_context)):
             fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(10, 10))      
             self.residual_plot(df, fittedvalues_col, ax=ax[0, 0])
             self.qq_plot(df, features, ax=ax[0, 1])
