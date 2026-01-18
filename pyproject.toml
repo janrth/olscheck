@@ -7,7 +7,7 @@ name = "olscheck"
 version = "0.1.7"
 description = "A library to check OLS assumptions."
 readme = "readme.md"
-requires-python = ">=3.6"
+requires-python = ">=3.9"
 dependencies = [
     "numpy==1.26.4",
     "pandas==2.2.2",
