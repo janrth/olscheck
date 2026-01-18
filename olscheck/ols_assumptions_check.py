@@ -52,14 +52,13 @@ class OlsCheck:
     def _residuals_studentized_internal(self, df: pd.DataFrame, features: List[str], constant=True) -> (np.ndarray, np.ndarray):
         # QR decomposition for leverage calculation
         if constant:
-            df = add_constant(df)
-            X = df[['const']+features]
+            X = df[features].to_numpy()
+            X = np.column_stack((np.ones(len(df)), X))
         else:
-            X = df[features].values
-        residuals = df['residuals']
-        Q, R = np.linalg.qr(X)
-        H = Q @ Q.T
-        leverage = np.diagonal(H)
+            X = df[features].to_numpy()
+        residuals = df['residuals'].to_numpy()
+        Q, _ = np.linalg.qr(X, mode='reduced')
+        leverage = np.sum(Q ** 2, axis=1)
         
         # Compute normalized residuals
         s = np.std(residuals, ddof=1) # using Bessel's correction for sample standard deviation
@@ -211,4 +210,3 @@ class OlsCheck:
                                #fittedvalues_col, y_true_col,
                                axis_lim, constant, ax=ax[1,1])
             plt.show()
-
