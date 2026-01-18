@@ -17,5 +17,10 @@ dependencies = [
     "scienceplots==2.1.1",
 ]
 
+[dependency-groups]
+test = [
+    "pytest>=7.4.0",
+]
+
 [project.urls]
 Homepage = "https://github.com/janrth/olscheck"
