@@ -22,7 +22,6 @@ setup(
         "matplotlib",
         "seaborn",
         "statsmodels",
-        "scienceplot"
+        "scienceplots"
     ],
 )
-

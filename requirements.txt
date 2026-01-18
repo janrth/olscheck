@@ -1,6 +1,0 @@
-numpy==1.26.4
-pandas==2.2.2
-matplotlib==3.8.4
-seaborn==0.13.2
-statsmodels==0.14.2
-scienceplots==2.1.1
