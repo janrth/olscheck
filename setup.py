@@ -6,7 +6,7 @@ setup(
     author="Jan Rathfelder",
     author_email="jan_rathfelder@yahoo.de",
     description="A library to check OLS assumptions.",
-    long_description=open("README.md").read(),
+    long_description=open("readme.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/janrth/olscheck", 
     packages=find_packages(),
@@ -22,7 +22,6 @@ setup(
         "matplotlib",
         "seaborn",
         "statsmodels",
-        "scienceplot"
+        "scienceplots"
     ],
 )
-

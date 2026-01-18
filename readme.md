@@ -24,3 +24,11 @@ Much of the code for this library is inspired by [Statsmodels](https://www.stats
 
 ```bash
 pip install olscheck
+```
+
+## Development setup (uv)
+
+```bash
+uv sync --group test
+uv run pytest
+```
