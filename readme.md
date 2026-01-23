@@ -1,5 +1,7 @@
 # OlsCheck
 
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/olscheck?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/olscheck)
+
 `olscheck` is a Python library designed to check and visualize the assumptions of Ordinary Least Squares (OLS). This tool streamlines the process of model diagnostics, offering an all-in-one solution for analyzing residuals, leverage, and multi-collinearity.
 
 ![Residuals vs Fitted](images/example_plot.png) 
